@@ -144,13 +144,14 @@ Tests for known bugs use `test.fail(...)`. They assert the expected correct beha
 ## Documentation
 
 - [Test Strategy](test_documents/TEST_STRATEGY.md)
+- [Стратегія тестування (українською)](<test_documents/Стратегія тестування.md>)
 - [Bug Reports](test_documents/BUG_REPORTS.md)
 - [API reference](API.md)
 - [OpenAPI specification](openapi.yaml)
 
 ## Continuous integration
 
-The workflow runs on pushes to `main` or `master`, and pull requests targeting these branches.
+The workflow runs on every push, and on pull requests targeting `main` or `master`.
 
 Configure the following GitHub repository Actions secrets before running CI:
 
@@ -214,3 +215,25 @@ docker compose down
 ```
 
 If the optional webhook profile was enabled, use `docker compose --profile webhooks down` to stop it as well. Adding `-v` deletes the local database volume; use it only when an intentional database reset is needed.
+
+## 4. Stripe test cards
+
+Use these cards only in Stripe test mode. Enter any future expiry date
+and any three-digit CVC.
+
+| Card number           | Scenario                          |
+| --------------------- | --------------------------------- |
+| `4242 4242 4242 4242` | Successful payment                |
+| `4000 0000 0000 0002` | Card declined                     |
+| `4000 0000 0000 9995` | Insufficient funds                |
+| `4000 0027 6000 3184` | 3D Secure authentication required |
+
+For direct API requests, use a test PaymentMethod ID in the
+`payment_method` field instead of a card number:
+
+| PaymentMethod                             | Scenario                          |
+| ----------------------------------------- | --------------------------------- |
+| `pm_card_visa`                            | Successful payment                |
+| `pm_card_chargeDeclined`                  | Card declined                     |
+| `pm_card_chargeDeclinedInsufficientFunds` | Insufficient funds                |
+| `pm_card_threeDSecure2Required`           | 3D Secure authentication required |
